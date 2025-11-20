@@ -2,31 +2,31 @@ from fastapi import FastAPI
 import importlib
 ROUTE_MODULES = [
     # Публичные API
-    "api.voice.v1.routes",
+    # "api.voice.v1.routes",  # Disabled - requires httpx
 
     # Основные модули тренажёра
-    "api.modules.master_path.v3.routes",
-    "api.modules.objections.v3.routes",
-    "api.modules.upsell.v3.routes",
-    "api.modules.arena.v4.routes",
-    "api.modules.sleeping_dragon.v4.routes",
-    "api.modules.exam_autocheck.v2.routes",
-    # "api.modules.payments.v2.routes",  # Disabled - requires integrations.patch_v4 and bridges.crm_sync
+    "modules.master_path.v3.routes",
+    "modules.objections.v3.routes",
+    "modules.upsell.v3.routes",
+    "modules.arena.v4.routes",
+    "modules.sleeping_dragon.v4.routes",
+    "modules.exam_autocheck.v2.routes",
+    # "modules.payments.v2.routes",  # Disabled - requires integrations.patch_v4 and bridges.crm_sync
 
     # Trainer-пакет (новые модули)
-    "api.modules.trainer_core.v1.routes",
-    "api.modules.trainer_scenarios.v1.routes",
-    "api.modules.trainer_dialog_engine.v1.routes",
-    "api.modules.trainer_arena_pro.v1.routes",
-    "api.modules.trainer_upsell_master.v1.routes",
-    "api.modules.trainer_story_collection.v1.routes",
-    "api.modules.trainer_exam.v1.routes",
+    "modules.trainer_core.v1.routes",
+    "modules.trainer_scenarios.v1.routes",
+    "modules.trainer_dialog_engine.v1.routes",
+    "modules.trainer_arena_pro.v1.routes",
+    "modules.trainer_upsell_master.v1.routes",
+    "modules.trainer_story_collection.v1.routes",
+    "modules.trainer_exam.v1.routes",
 
     # Доп-модули
-    "api.modules.voice_arena.v1.routes",
-    "api.modules.dialog_memory.v1.routes",
-    "api.modules.edu_lessons.v1.routes",
-    "api.modules.client_cases.v1.routes",
+    "modules.voice_arena.v1.routes",
+    "modules.dialog_memory.v1.routes",
+    "modules.edu_lessons.v1.routes",
+    "modules.client_cases.v1.routes",
 
     # Интеграции
     "integrations.telegram_push.v1.routes",

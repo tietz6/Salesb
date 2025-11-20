@@ -29,3 +29,6 @@ async def start_telegram(req: Request):
     }
 @router.post("/start/{sid}")
 async def start(sid:str):
+    eng = DragonEngine(sid)
+    eng.reset()
+    return {"ok": True, "sid": sid}

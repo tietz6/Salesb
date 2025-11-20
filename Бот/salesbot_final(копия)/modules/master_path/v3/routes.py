@@ -33,3 +33,6 @@ async def start_telegram(req: Request):
     }
 @router.post("/start/{sid}")
 async def start(sid: str):
+    mp = MasterPath(sid)
+    mp.reset()
+    return {"ok": True, "sid": sid}

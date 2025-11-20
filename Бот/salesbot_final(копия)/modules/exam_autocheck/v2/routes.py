@@ -30,3 +30,6 @@ async def start_telegram(req: Request):
     }
 @router.post("/start/{sid}")
 async def start(sid:str):
+    ex = ExamAutoCheck(sid)
+    result = ex.start()
+    return {"ok": True, "sid": sid}
