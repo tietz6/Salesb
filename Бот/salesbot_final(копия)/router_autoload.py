@@ -11,7 +11,7 @@ ROUTE_MODULES = [
     "api.modules.arena.v4.routes",
     "api.modules.sleeping_dragon.v4.routes",
     "api.modules.exam_autocheck.v2.routes",
-    "api.modules.payments.v2.routes",
+    # "api.modules.payments.v2.routes",  # Disabled - requires integrations.patch_v4 and bridges.crm_sync
 
     # Trainer-пакет (новые модули)
     "api.modules.trainer_core.v1.routes",
