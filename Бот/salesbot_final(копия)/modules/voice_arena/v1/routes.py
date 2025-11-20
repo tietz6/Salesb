@@ -35,7 +35,9 @@ async def start(req: Request):
     ctx = data.get("context","")
     # also create dialog_memory session for same id so we can append later
     rec = new_session(manager_id, ctx)
-        dm_start(manager_id)  # returns new id, но в service.stop_and_score делаем бэкофф по arena-id
+    try:
+        # dm_start(manager_id)  # returns new id, но в service.stop_and_score делаем бэкофф по arena-id
+        pass
     except Exception:
         pass
     
