@@ -33,3 +33,6 @@ Thumbs.db
 
 # Logs
 *.log
+# Session data generated during testing
+api/modules/voice_arena/v1/data/sessions/
+api/modules/trainer_dialog_engine/v1/data/*.json
