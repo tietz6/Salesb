@@ -102,6 +102,6 @@ def main():
     else:
         print("\n❌ Bot connection failed - see diagnosis above")
         return 1
-
+pause
 if __name__ == "__main__":
     sys.exit(main())
