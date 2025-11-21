@@ -23,14 +23,45 @@ REM Телеграм-бот для пушей
 REM === ТЕЛЕГРАМ ДЛЯ PUSH ===
 set TELEGRAM_BOT_TOKEN=8029409301:AAGpKsSxQ_rdQJm_5kR6hk_E5JgOoQLNAgI
 set TG_BOT_TOKEN=8029409301:AAGpKsSxQ_rdQJm_5kR6hk_E5JgOoQLNAgI
+set TELEGRAM_TOKEN=8029409301:AAGpKsSxQ_rdQJm_5kR6hk_E5JgOoQLNAgI
 set TELEGRAM_PUSH_MOCK_MODE=false
 
+echo ===================================
+echo SALESBOT - Запуск всех компонентов
+echo ===================================
+echo.
+echo Telegram Bot Token: %TELEGRAM_BOT_TOKEN%
+echo DeepSeek API Key: %DEEPSEEK_API_KEY%
+echo Voice API Key: %VOICE_API_KEY%
+echo.
+
 REM === ЗАПУСК API ===
+echo [1/4] Запуск FastAPI сервера...
 start "SALESBOT_API" python -m uvicorn startup:app --host 0.0.0.0 --port 8080 --reload
-python main.py
 
-REM === Запускаем Telegram-бота в отдельном окне ===
-start "SALESBOT_BOT" python simple_telegram_bot.py
+REM === Запуск main.py ===
+echo [2/4] Запуск main.py...
+start "SALESBOT_MAIN" python main.py
 
+REM === Запускаем simple_telegram_bot.py ===
+echo [3/4] Запуск simple telegram bot...
+start "SALESBOT_SIMPLE_BOT" python simple_telegram_bot.py
+
+REM === Запускаем telegram_bot.py (основной бот) ===
+echo [4/4] Запуск основного telegram bot...
+start "SALESBOT_TELEGRAM_BOT" python telegram_bot.py
+
+echo.
+echo ===================================
+echo Все компоненты запущены!
+echo ===================================
+echo.
+echo Открытые окна:
+echo - SALESBOT_API: FastAPI сервер (порт 8080)
+echo - SALESBOT_MAIN: Основное приложение
+echo - SALESBOT_SIMPLE_BOT: Простой Telegram бот
+echo - SALESBOT_TELEGRAM_BOT: Продвинутый Telegram бот
+echo.
+echo Нажмите любую клавишу для выхода...
 pause
 endlocal
