@@ -19,8 +19,6 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    user_sessions = {}
-    
     @dp.message_handler(commands=["objections", "возражения"])
     async def _cmd_objections(message: types.Message):
         """
@@ -30,7 +28,14 @@ def register_telegram(dp, registry):
         from .engine import ObjectionEngine
         
         user_id = str(message.from_user.id)
-        user_sessions[user_id] = 'objections'
+        
+        # Set active session in router
+        try:
+            from telegram_message_router import set_active_session
+            set_active_session(user_id, 'objections')
+        except:
+            pass
+        
         obj = ObjectionEngine(user_id)
         state = obj.snapshot()
         
@@ -79,6 +84,13 @@ def register_telegram(dp, registry):
         user_id = str(message.from_user.id)
         obj = ObjectionEngine(user_id)
         obj._reset()
+        
+        # Clear active session
+        try:
+            from telegram_message_router import clear_active_session
+            clear_active_session(user_id)
+        except:
+            pass
         
         await message.reply("🔄 Новое возражение сгенерировано!\n\nИспользуй /objections чтобы начать.")
     

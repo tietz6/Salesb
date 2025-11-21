@@ -20,9 +20,6 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    # Храним активные сессии пользователей
-    user_sessions = {}
-    
     @dp.message_handler(commands=["master_path", "путь_мастера"])
     async def _cmd_master_path(message: types.Message):
         """
@@ -32,7 +29,14 @@ def register_telegram(dp, registry):
         from .engine import MasterPath
         
         user_id = str(message.from_user.id)
-        user_sessions[user_id] = 'master_path'
+        
+        # Set active session in router
+        try:
+            from telegram_message_router import set_active_session
+            set_active_session(user_id, 'master_path')
+        except:
+            pass
+        
         mp = MasterPath(user_id)
         state = mp.snapshot()
         
@@ -99,6 +103,13 @@ def register_telegram(dp, registry):
         user_id = str(message.from_user.id)
         mp = MasterPath(user_id)
         mp._reset()
+        
+        # Clear active session
+        try:
+            from telegram_message_router import clear_active_session
+            clear_active_session(user_id)
+        except:
+            pass
         
         await message.reply("🔄 Тренировка сброшена. Начинаем с начала!\n\nИспользуй /master_path чтобы начать.")
     

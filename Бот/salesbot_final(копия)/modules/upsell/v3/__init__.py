@@ -15,8 +15,6 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    user_sessions = {}
-    
     @dp.message_handler(commands=["upsell", "допродажи"])
     async def _cmd_upsell(message: types.Message):
         """
@@ -26,7 +24,14 @@ def register_telegram(dp, registry):
         from .engine import UpsellEngine, PACKAGES
         
         user_id = str(message.from_user.id)
-        user_sessions[user_id] = 'upsell'
+        
+        # Set active session in router
+        try:
+            from telegram_message_router import set_active_session
+            set_active_session(user_id, 'upsell')
+        except:
+            pass
+        
         upsell = UpsellEngine(user_id)
         state = upsell.snapshot()
         
@@ -67,6 +72,13 @@ def register_telegram(dp, registry):
         user_id = str(message.from_user.id)
         upsell = UpsellEngine(user_id)
         upsell._reset()
+        
+        # Clear active session
+        try:
+            from telegram_message_router import clear_active_session
+            clear_active_session(user_id)
+        except:
+            pass
         
         await message.reply("🔄 Новый сценарий допродажи сгенерирован!\n\nИспользуй /upsell чтобы начать.")
     

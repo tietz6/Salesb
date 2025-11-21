@@ -19,8 +19,6 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    user_sessions = {}
-    
     @dp.message_handler(commands=["arena", "арена"])
     async def _cmd_arena(message: types.Message):
         """
@@ -30,7 +28,14 @@ def register_telegram(dp, registry):
         from .engine import ArenaEngine
         
         user_id = str(message.from_user.id)
-        user_sessions[user_id] = 'arena'
+        
+        # Set active session in router
+        try:
+            from telegram_message_router import set_active_session
+            set_active_session(user_id, 'arena')
+        except:
+            pass
+        
         arena = ArenaEngine(user_id)
         state = arena.snapshot()
         
@@ -77,6 +82,13 @@ def register_telegram(dp, registry):
         user_id = str(message.from_user.id)
         arena = ArenaEngine(user_id)
         arena.reset()
+        
+        # Clear active session
+        try:
+            from telegram_message_router import clear_active_session
+            clear_active_session(user_id)
+        except:
+            pass
         
         await message.reply("🔄 Новый клиент сгенерирован!\n\nИспользуй /arena чтобы начать.")
     
