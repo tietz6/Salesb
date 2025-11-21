@@ -81,9 +81,10 @@ start_core_api.bat
 
 Это запустит все необходимые компоненты в отдельных окнах:
 - FastAPI сервер (порт 8080)
-- Основное приложение
-- Simple Telegram бот
-- Основной Telegram бот
+- Telegram бот с полным функционалом (aiogram 3.x)
+
+**Альтернатива:** Для разработчиков доступен упрощённый бот `start_simple_telegram_bot.bat`.
+См. **STARTUP_OPTIONS.md** для деталей.
 
 #### Linux/Mac
 ```bash
