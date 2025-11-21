@@ -88,13 +88,20 @@ def api_stop(sid: str) -> dict:
 
 # ===================== MODULE DISCOVERY & PROBING =====================
 
-# Candidate endpoint patterns (tried in order)
-PROBE_PATTERNS = [
+# Candidate endpoint patterns for modules WITH version (tried in order)
+PROBE_PATTERNS_WITH_VERSION = [
     "/{module}/{version}/start",
     "/{module}/{version}/start_session",
     "/{module}/{version}/run",
     "/{module}/{version}/init",
+]
+
+# Candidate endpoint patterns for modules WITHOUT version (tried in order)
+PROBE_PATTERNS_NO_VERSION = [
     "/{module}/start",
+    "/{module}/start_session",
+    "/{module}/run",
+    "/{module}/init",
 ]
 
 def fetch_routes_summary() -> Dict:
@@ -135,8 +142,17 @@ def probe_module_endpoint(module: str, version: str) -> str:
     Try to find a working endpoint for module/version by POSTing empty chat_id.
     Returns endpoint path (starting with /) or empty string.
     """
-    for pattern in PROBE_PATTERNS:
-        candidate = pattern.format(module=module, version=version)
+    # Select appropriate patterns based on whether version is provided
+    if version:
+        patterns = PROBE_PATTERNS_WITH_VERSION
+    else:
+        patterns = PROBE_PATTERNS_NO_VERSION
+    
+    for pattern in patterns:
+        if version:
+            candidate = pattern.format(module=module, version=version)
+        else:
+            candidate = pattern.format(module=module)
         url = BACKEND_URL + candidate
         try:
             # POST a lightweight probe; backend should respond quickly
