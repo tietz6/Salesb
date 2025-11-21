@@ -1,6 +1,3 @@
-# Пример шаблона для модуля upsell v3
-# Сохраните бизнес-логику прежней; ниже — только регистрация телеграм-хэндлеров.
-
 try:
     from aiogram import types
     from aiogram.dispatcher import Dispatcher
@@ -10,28 +7,100 @@ except ImportError:
     types = None
     Dispatcher = None
 
-# Здесь — импорт бизнес-функций модуля (ленивый внутри хэндлера, чтобы избежать циклов)
 def register_telegram(dp, registry):
     """
-    Регистрируем все телеграм-хэндлеры, которые относятся к этому модулю.
+    Регистрируем телеграм-хэндлеры для модуля upsell (допродажи).
     Вызывается автозагрузчиком telegram/autoload.py.
     """
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["upsell"])
-    async def _cmd_upsell(message):
-        # ленивый импорт бизнес-логики
-        try:
-            from .service import start_upsell_session  # пример
-        except Exception:
-            # если нет service — используем заглушку
-            async def start_upsell_session(user_id):
-                return {"ok": True, "note": "stub"}
-
-        user_id = message.from_user.id
-        result = start_upsell_session(user_id)
-        # Если result — coroutine, await it
-        if hasattr(result, "__await__"):
-            result = await result
-        await message.reply(f"Upsell started: {result}")
+    user_sessions = {}
+    
+    @dp.message_handler(commands=["upsell", "допродажи"])
+    async def _cmd_upsell(message: types.Message):
+        """
+        Команда /upsell - тренировка допродаж
+        3 режима клиента, 3 пакета услуг
+        """
+        from .engine import UpsellEngine, PACKAGES
+        
+        user_id = str(message.from_user.id)
+        user_sessions[user_id] = 'upsell'
+        upsell = UpsellEngine(user_id)
+        state = upsell.snapshot()
+        
+        modes_ru = {
+            "soft": "😊 Мягкий",
+            "normal": "😐 Обычный",
+            "aggressive": "😠 Жесткий"
+        }
+        
+        packages_ru = {
+            "basic": "🎵 Basic - Песня + обработка",
+            "premium": "🎬 Premium - Песня + видео открытка",
+            "gold": "⭐ Gold - Песня + премиум история + видео"
+        }
+        
+        mode_name = modes_ru.get(state['mode'], state['mode'])
+        package_name = packages_ru.get(state['package'], state['package'])
+        
+        help_text = (
+            "🏆 *Допродажи* - Вкус Победы\n\n"
+            f"👤 Клиент: {mode_name}\n"
+            f"📦 Пакет для допродажи: {package_name}\n\n"
+            "💬 Клиент уже заказал базовую песню.\n"
+            "Твоя задача - предложить апгрейд!\n\n"
+            "Я буду отвечать как клиент через DeepSeek AI.\n\n"
+            "Команды:\n"
+            "/upsell_reset - новый сценарий\n"
+            "/upsell_status - статистика"
+        )
+        
+        await message.reply(help_text, parse_mode="Markdown")
+    
+    @dp.message_handler(commands=["upsell_reset"])
+    async def _cmd_upsell_reset(message: types.Message):
+        """Начать с новым сценарием"""
+        from .engine import UpsellEngine
+        
+        user_id = str(message.from_user.id)
+        upsell = UpsellEngine(user_id)
+        upsell._reset()
+        
+        await message.reply("🔄 Новый сценарий допродажи сгенерирован!\n\nИспользуй /upsell чтобы начать.")
+    
+    @dp.message_handler(commands=["upsell_status"])
+    async def _cmd_upsell_status(message: types.Message):
+        """Посмотреть статистику"""
+        from .engine import UpsellEngine
+        
+        user_id = str(message.from_user.id)
+        upsell = UpsellEngine(user_id)
+        state = upsell.snapshot()
+        
+        modes_ru = {
+            "soft": "😊 Мягкий",
+            "normal": "😐 Обычный",
+            "aggressive": "😠 Жесткий"
+        }
+        
+        packages_ru = {
+            "basic": "🎵 Basic",
+            "premium": "🎬 Premium",
+            "gold": "⭐ Gold"
+        }
+        
+        mode_name = modes_ru.get(state['mode'], state['mode'])
+        package_name = packages_ru.get(state['package'], state['package'])
+        history_count = len(state.get('history', []))
+        
+        status_text = (
+            f"📊 *Статус тренировки*\n\n"
+            f"👤 Клиент: {mode_name}\n"
+            f"📦 Пакет: {package_name}\n"
+            f"💬 Реплик: {history_count}\n\n"
+            "Продолжай работу с допродажей!"
+        )
+        
+        await message.reply(status_text, parse_mode="Markdown")
