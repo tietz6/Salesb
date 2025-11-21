@@ -133,9 +133,9 @@ python telegram_bot.py
 ```
 salesbot_final(копия)/
 ├── start_core_api.bat           # Главный файл запуска (Windows)
-├── start_simple_telegram_bot.bat # Альтернативный бот (для разработки)
-├── telegram_bot.py              # Основной Telegram бот (aiogram 3.x)
-├── simple_telegram_bot.py       # Упрощённый бот (HTTP API)
+├── telegram_bot.py              # Telegram бот (aiogram 3.x)
+├── telegram_main_menu.py        # Главное меню бота
+├── telegram_message_router.py   # Маршрутизация сообщений
 ├── startup.py                   # FastAPI приложение
 ├── requirements.txt             # Зависимости Python
 ├── validate_setup.py            # Проверка конфигурации
