@@ -81,11 +81,8 @@ echo   Voice API Key: %VOICE_API_KEY%
 echo   Backend URL: %BACKEND_URL%
 echo.
 echo Запускаемые компоненты:
-echo   [1/1] FastAPI Backend Server с интегрированным Telegram ботом (порт 8080)
-echo.
-echo ВАЖНО: Telegram бот теперь интегрирован в FastAPI!
-echo   - Все модули тренировки загружаются автоматически
-echo   - Бот доступен через webhook: %BACKEND_URL%/api/telegram/webhook
+echo   [1/2] FastAPI Backend Server (порт 8080)
+echo   [2/2] Telegram Bot с модулями тренировки (aiogram 3.x)
 echo.
 echo Совет: Для проверки конфигурации запустите: python validate_setup.py
 echo.
@@ -96,8 +93,8 @@ REM ============================================================================
 REM === ЗАПУСК КОМПОНЕНТОВ ===
 REM ============================================================================
 
-REM === FastAPI Backend Server с интегрированным Telegram ботом ===
-echo [1/1] Запуск FastAPI сервера с Telegram ботом на порту 8080...
+REM === Компонент 1: FastAPI Backend Server ===
+echo [1/2] Запуск FastAPI сервера на порту 8080...
 start "SALESBOT_API" python -m uvicorn startup:app --host 0.0.0.0 --port 8080 --reload
 if errorlevel 1 (
     echo ОШИБКА: Не удалось запустить FastAPI сервер
@@ -106,8 +103,17 @@ if errorlevel 1 (
 )
 
 REM Пауза для инициализации сервера
-echo Ожидание запуска сервера (5 секунд)...
-timeout /t 5 /nobreak > nul
+echo Ожидание запуска сервера (3 секунды)...
+timeout /t 3 /nobreak > nul
+
+REM === Компонент 2: Telegram Bot (aiogram 3.x) ===
+echo [2/2] Запуск Telegram бота с модулями тренировки...
+start "SALESBOT_TELEGRAM_BOT" python telegram_bot.py
+if errorlevel 1 (
+    echo ОШИБКА: Не удалось запустить Telegram бота
+    pause
+    exit /b 1
+)
 
 REM ============================================================================
 REM === ИНФОРМАЦИЯ ДЛ�Я ПОЛЬЗОВАТЕЛЯ ===
@@ -115,17 +121,16 @@ REM ============================================================================
 
 echo.
 echo ============================================================================
-echo                         Система запущена!
+echo                         Все компоненты запущены!
 echo ============================================================================
 echo.
 echo Открытые окна:
-echo   - SALESBOT_API: FastAPI Backend Server с Telegram ботом (http://localhost:8080)
+echo   - SALESBOT_API: FastAPI Backend Server (http://localhost:8080)
+echo   - SALESBOT_TELEGRAM_BOT: Telegram бот с полным функционалом
 echo.
 echo Для проверки Backend API откройте в браузере:
 echo   http://localhost:8080/api/public/v1/health
 echo   http://localhost:8080/docs (документация API)
-echo.
-echo Telegram Webhook URL: http://localhost:8080/api/telegram/webhook
 echo.
 echo ============================================================================
 echo Доступные команды в Telegram боте:
@@ -169,17 +174,11 @@ echo   - Откройте http://localhost:8080/api/public/v1/health
 echo   - Отправьте /start боту в Telegram
 echo.
 echo Если бот не отвечает:
-echo   1. Проверьте логи в окне SALESBOT_API
+echo   1. Проверьте логи в окне SALESBOT_TELEGRAM_BOT
 echo   2. Убедитесь, что TELEGRAM_BOT_TOKEN правильный
-echo   3. Настройте webhook в Telegram (см. инструкции ниже)
+echo   3. Проверьте подключение к интернету
 echo   4. Запустите: python validate_setup.py
 echo   5. См. STARTUP_OPTIONS.md раздел "Решение проблем"
-echo.
-echo Настройка Telegram webhook (выполнить один раз):
-echo   1. Получите публичный URL (ngrok, localtunnel и т.д.)
-echo   2. Установите webhook: python setup_telegram_webhook.py ^<ваш_публичный_url^>
-echo   3. Или вручную: curl -X POST https://api.telegram.org/bot^<TOKEN^>/setWebhook
-echo      -d url=^<URL^>/api/telegram/webhook
 echo.
 echo Документация:
 echo   - STARTUP_OPTIONS.md - Варианты запуска и решение проблем

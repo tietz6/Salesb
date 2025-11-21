@@ -41,42 +41,27 @@ set TELEGRAM_BOT_TOKEN=ваш_токен_от_botfather
 set DEEPSEEK_API_KEY=ваш_ключ_deepseek
 ```
 
-### 4. Запустите систему
+### 4. Запустите бота
 
 **Windows:**
 ```cmd
 start_core_api.bat
 ```
 
-Это запустит FastAPI сервер с интегрированным Telegram ботом на порту 8080.
-
 **Linux/Mac:**
 ```bash
+# Терминал 1: Backend
 export TELEGRAM_BOT_TOKEN="ваш_токен"
 export DEEPSEEK_API_KEY="ваш_ключ"
 python -m uvicorn startup:app --host 0.0.0.0 --port 8080
+
+# Терминал 2: Telegram Bot
+export TELEGRAM_BOT_TOKEN="ваш_токен"
+export DEEPSEEK_API_KEY="ваш_ключ"
+python telegram_bot.py
 ```
 
-### 5. Настройте webhook
-
-Telegram бот теперь работает через webhook. Вам нужен публичный URL:
-
-**Вариант A: Используйте ngrok (для тестирования):**
-```bash
-# В отдельном терминале
-ngrok http 8080
-```
-
-**Вариант B: Используйте ваш домен (для продакшена)**
-
-Затем настройте webhook:
-```bash
-python setup_telegram_webhook.py https://ваш-публичный-url
-```
-
-Подробные инструкции: [TELEGRAM_WEBHOOK_SETUP.md](TELEGRAM_WEBHOOK_SETUP.md)
-
-### 6. Используйте бота
+### 5. Используйте бота
 
 1. Найдите своего бота в Telegram
 2. Отправьте `/start`
@@ -148,11 +133,10 @@ python setup_telegram_webhook.py https://ваш-публичный-url
 ```
 salesbot_final(копия)/
 ├── start_core_api.bat           # Главный файл запуска (Windows)
-├── startup.py                   # FastAPI приложение с интегрированным ботом
-├── setup_telegram_webhook.py   # Настройка Telegram webhook
-├── telegram_bot.py              # (Устаревший) Standalone бот
+├── telegram_bot.py              # Telegram бот (aiogram 3.x)
 ├── telegram_main_menu.py        # Главное меню бота
 ├── telegram_message_router.py   # Маршрутизация сообщений
+├── startup.py                   # FastAPI приложение
 ├── requirements.txt             # Зависимости Python
 ├── validate_setup.py            # Проверка конфигурации
 │
@@ -176,12 +160,10 @@ salesbot_final(копия)/
 
 ### Для пользователей
 - **[QUICK_START.md](QUICK_START.md)** - Быстрый старт за 5 минут
-- **[TELEGRAM_WEBHOOK_SETUP.md](TELEGRAM_WEBHOOK_SETUP.md)** - 🆕 Настройка Telegram webhook
 - **[TELEGRAM_BOT_GUIDE.md](TELEGRAM_BOT_GUIDE.md)** - Полное руководство по боту
 - **[STARTUP_OPTIONS.md](STARTUP_OPTIONS.md)** - Варианты запуска и решение проблем
 
 ### Для разработчиков
-- **[АРХИТЕКТУРА_БОТА.md](АРХИТЕКТУРА_БОТА.md)** - 🆕 Архитектура webhook интеграции
 - **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** - Техническая документация
 - **[TELEGRAM_MODULES_RU.md](TELEGRAM_MODULES_RU.md)** - Описание модулей
 - **[CONSOLIDATED_STARTUP.md](CONSOLIDATED_STARTUP.md)** - Архитектура системы
@@ -219,15 +201,13 @@ salesbot_final(копия)/
 
 ### Бот не отвечает
 
-**Проблема:** Бот не реагирует на команды
+**Проблема:** Бот онлайн, но не реагирует на команды
 
 **Решение:**
-1. Проверьте, что сервер запущен: `start_core_api.bat`
-2. Проверьте статус webhook: `python setup_telegram_webhook.py info`
-3. Убедитесь, что публичный URL доступен (ngrok и т.д.)
-4. Проверьте логи в окне SALESBOT_API
-5. Запустите `python validate_setup.py` для диагностики
-6. См. подробное руководство: [TELEGRAM_WEBHOOK_SETUP.md](TELEGRAM_WEBHOOK_SETUP.md)
+1. Проверьте логи в окне SALESBOT_TELEGRAM_BOT
+2. Убедитесь, что оба компонента запущены
+3. Попробуйте перезапустить: закройте оба окна и запустите `start_core_api.bat` снова
+4. Запустите `python validate_setup.py` для диагностики
 
 ### DeepSeek не работает
 
@@ -254,34 +234,28 @@ salesbot_final(копия)/
 2. Используйте `python-dotenv` для загрузки
 3. Добавьте `.env` в `.gitignore`
 
-## 📊 Архитектура (Webhook Mode)
+## 📊 Архитектура
 
 ```
-Telegram API
-     ↓ (отправляет обновления через webhook)
+┌─────────────────────────────────────────┐
+│    TELEGRAM BOT (aiogram 3.x)           │
+│         telegram_bot.py                 │
+├─────────────────────────────────────────┤
+│ • Главное меню                          │
+│ • Модули тренировки                     │
+│ • AI-Коуч                               │
+│ • Роутер сообщений                      │
+└─────────────────────────────────────────┘
+            ↕ API calls
 ┌─────────────────────────────────────────┐
 │   FASTAPI BACKEND (порт 8080)           │
-│   startup.py с интегрированным ботом    │
+│         startup.py                      │
 ├─────────────────────────────────────────┤
-│ • Telegram Bot (aiogram 3.x)            │
-│ • Webhook endpoint                      │
-│ • Главное меню и команды                │
-│ • Модули тренировки                     │
-│ • AI-Коуч (DeepSeek)                    │
-│ • Роутер сообщений                      │
+│ • Автозагрузка модулей                  │
 │ • REST API endpoints                    │
+│ • Бизнес-логика                         │
 └─────────────────────────────────────────┘
-     ↓ (отправляет ответы через)
-Telegram API
-
-Преимущества webhook mode:
-✅ Один процесс для всей системы
-✅ Работает через reverse proxy
-✅ Не требует прямого подключения к Telegram API
-✅ Масштабируется горизонтально
 ```
-
-Подробнее: [АРХИТЕКТУРА_БОТА.md](АРХИТЕКТУРА_БОТА.md)
 
 ## 🤝 Поддержка
 
