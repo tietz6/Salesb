@@ -38,6 +38,15 @@ async def test_connection():
             print(f"  Can Read All Group Messages: {me.can_read_all_group_messages}")
             print(f"=" * 60)
             
+            # Clear any webhooks to ensure polling works
+            print(f"\n⏳ Removing any existing webhooks...")
+            await bot.delete_webhook(drop_pending_updates=True)
+            webhook_info = await bot.get_webhook_info()
+            if webhook_info.url:
+                print(f"⚠️  Warning: Webhook still set to {webhook_info.url}")
+            else:
+                print(f"✅ No webhook set - polling mode ready")
+            
             await bot.session.close()
             return True
             
