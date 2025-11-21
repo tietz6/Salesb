@@ -57,6 +57,11 @@ async def main():
         print(f"[telegram_bot]   - Name: {me.first_name}")
         print(f"[telegram_bot]   - Username: @{me.username}")
         
+        # Delete any existing webhook to ensure polling works
+        print(f"[telegram_bot] Removing any existing webhook...")
+        await bot.delete_webhook(drop_pending_updates=True)
+        print(f"[telegram_bot] ✅ Webhook removed (if any existed)")
+        
     except Exception as e:
         print(f"[telegram_bot] ❌ ERROR: Failed to connect to Telegram API")
         print(f"[telegram_bot] Error type: {type(e).__name__}")
