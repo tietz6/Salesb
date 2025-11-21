@@ -82,7 +82,7 @@ echo   Backend URL: %BACKEND_URL%
 echo.
 echo Запускаемые компоненты:
 echo   [1/2] FastAPI Backend Server (порт 8080)
-echo   [2/2] Telegram Bot с модулями тренировки (aiogram 3.x)
+echo   [2/2] Telegram Bot в режиме Polling - БЕЗ WEBHOOK (aiogram 3.x)
 echo.
 echo Совет: Для проверки конфигурации запустите: python validate_setup.py
 echo.
@@ -108,6 +108,7 @@ timeout /t 3 /nobreak > nul
 
 REM === Компонент 2: Telegram Bot (aiogram 3.x) ===
 echo [2/2] Запуск Telegram бота с модулями тренировки...
+echo     Режим: Polling (без webhook - автоматическая очистка webhook при запуске)
 start "SALESBOT_TELEGRAM_BOT" python telegram_bot.py
 if errorlevel 1 (
     echo ОШИБКА: Не удалось запустить Telegram бота
@@ -126,7 +127,7 @@ echo ===========================================================================
 echo.
 echo Открытые окна:
 echo   - SALESBOT_API: FastAPI Backend Server (http://localhost:8080)
-echo   - SALESBOT_TELEGRAM_BOT: Telegram бот с полным функционалом
+echo   - SALESBOT_TELEGRAM_BOT: Telegram бот в режиме Polling (без webhook)
 echo.
 echo Для проверки Backend API откройте в браузере:
 echo   http://localhost:8080/api/public/v1/health
