@@ -43,6 +43,14 @@ def include_all(app: FastAPI)->None:
                 continue
             app.include_router(router)
             attached.append(m)
+            
+            # Also include additional routers if they exist (e.g., router_autocheck, router_autocheck_noversion)
+            for attr_name in dir(mod):
+                if attr_name.startswith("router_") and attr_name != "router":
+                    additional_router = getattr(mod, attr_name, None)
+                    if additional_router and hasattr(additional_router, "routes"):
+                        app.include_router(additional_router)
+                        attached.append(f"{m}.{attr_name}")
         except Exception as e:
             errors.append((m, str(e)))
 
