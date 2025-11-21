@@ -28,10 +28,8 @@ def persona_chat(prompt: str, role: str="coach")->str:
     vp = VoicePipeline()
     sys = (
         "Ты говоришь от имени бренда «На Счастье»: тёплый, уверенный стиль, "
-        "эмоции, искренность, уважение. Следуй правилам:
-" +
-        "
-".join(persona.get("rules", []))
+        "эмоции, искренность, уважение. Следуй правилам:\n" +
+        "\n".join(persona.get("rules", []))
     )
     msg = [
         {"role": "system", "content": sys},
