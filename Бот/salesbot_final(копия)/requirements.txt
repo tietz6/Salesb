@@ -1,0 +1,22 @@
+# Core dependencies for Salesbot application
+
+# Web framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# Telegram Bot
+aiogram>=2.25.0
+
+# HTTP client
+requests>=2.31.0
+
+# Python utilities
+python-dotenv>=1.0.0
+
+# Optional: For DeepSeek API (if using official SDK)
+# openai>=1.0.0  # DeepSeek API is OpenAI-compatible
+
+# Optional: For voice features (when implemented)
+# assemblyai>=0.17.0  # ASR
+# pyttsx3>=2.90  # TTS
