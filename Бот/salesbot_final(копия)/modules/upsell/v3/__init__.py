@@ -53,7 +53,7 @@ def register_telegram(dp, registry):
         package_name = packages_ru.get(state['package'], state['package'])
         
         help_text = (
-            "🏆 *Допродажи* - Вкус Победы\n\n"
+            "🏆 <b>Допродажи</b> - Вкус Победы\n\n"
             f"👤 Клиент: {mode_name}\n"
             f"📦 Пакет для допродажи: {package_name}\n\n"
             "💬 Клиент уже заказал базовую песню.\n"
@@ -64,7 +64,7 @@ def register_telegram(dp, registry):
             "/upsell_status - статистика"
         )
         
-        await message.reply(help_text, parse_mode="Markdown")
+        await message.reply(help_text, parse_mode="HTML")
     
     @dp.message(Command("upsell_reset"))
     async def _cmd_upsell_reset(message: types.Message):
@@ -110,11 +110,11 @@ def register_telegram(dp, registry):
         history_count = len(state.get('history', []))
         
         status_text = (
-            f"📊 *Статус тренировки*\n\n"
+            f"📊 <b>Статус тренировки</b>\n\n"
             f"👤 Клиент: {mode_name}\n"
             f"📦 Пакет: {package_name}\n"
             f"💬 Реплик: {history_count}\n\n"
             "Продолжай работу с допродажей!"
         )
         
-        await message.reply(status_text, parse_mode="Markdown")
+        await message.reply(status_text, parse_mode="HTML")

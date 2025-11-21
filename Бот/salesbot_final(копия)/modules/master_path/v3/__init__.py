@@ -55,8 +55,8 @@ def register_telegram(dp, registry):
         stage_name = stages_ru.get(state['stage'], state['stage'])
         
         help_text = (
-            "🎯 *Путь Мастера* - Полный цикл продажи\n\n"
-            f"📍 Текущий этап: *{stage_name}*\n\n"
+            "🎯 <b>Путь Мастера</b> - Полный цикл продажи\n\n"
+            f"📍 Текущий этап: <b>{stage_name}</b>\n\n"
             "📝 Этапы:\n"
             "1️⃣ Приветствие\n"
             "2️⃣ Квалификация клиента\n"
@@ -72,7 +72,7 @@ def register_telegram(dp, registry):
             "/mp_status - посмотреть прогресс"
         )
         
-        await message.reply(help_text, parse_mode="Markdown")
+        await message.reply(help_text, parse_mode="HTML")
     
     @dp.message(Command("mp_next"))
     async def _cmd_mp_next(message: types.Message):
@@ -95,7 +95,7 @@ def register_telegram(dp, registry):
         
         stage_name = stages_ru.get(new_stage, new_stage)
         
-        await message.reply(f"✅ Переход на этап: *{stage_name}*", parse_mode="Markdown")
+        await message.reply(f"✅ Переход на этап: <b>{stage_name}</b>", parse_mode="HTML")
     
     @dp.message(Command("mp_reset"))
     async def _cmd_mp_reset(message: types.Message):
@@ -138,10 +138,10 @@ def register_telegram(dp, registry):
         history_count = len(state.get('history', []))
         
         status_text = (
-            f"📊 *Статус тренировки*\n\n"
-            f"📍 Этап: *{stage_name}*\n"
+            f"📊 <b>Статус тренировки</b>\n\n"
+            f"📍 Этап: <b>{stage_name}</b>\n"
             f"💬 Реплик отправлено: {history_count}\n\n"
             "Продолжай тренировку, отправляя свои варианты реплик!"
         )
         
-        await message.reply(status_text, parse_mode="Markdown")
+        await message.reply(status_text, parse_mode="HTML")

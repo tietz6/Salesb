@@ -65,8 +65,8 @@ def register_telegram(dp, registry):
         persona = personas_ru.get(state['persona'], state['persona'])
         
         help_text = (
-            "🛡️ *Возражения* - Щит и Меч продажника\n\n"
-            f"⚠️ Тип возражения: *{obj_type}*\n"
+            "🛡️ <b>Возражения</b> - Щит и Меч продажника\n\n"
+            f"⚠️ Тип возражения: <b>{obj_type}</b>\n"
             f"👤 Персона клиента: {persona}\n\n"
             "💬 Клиент высказал возражение.\n"
             "Твоя задача - работать с возражением!\n\n"
@@ -76,7 +76,7 @@ def register_telegram(dp, registry):
             "/obj_status - статистика"
         )
         
-        await message.reply(help_text, parse_mode="Markdown")
+        await message.reply(help_text, parse_mode="HTML")
     
     @dp.message(Command("obj_reset"))
     async def _cmd_obj_reset(message: types.Message):
@@ -130,11 +130,11 @@ def register_telegram(dp, registry):
         history_count = len(state.get('history', []))
         
         status_text = (
-            f"📊 *Статус тренировки*\n\n"
-            f"⚠️ Возражение: *{obj_type}*\n"
+            f"📊 <b>Статус тренировки</b>\n\n"
+            f"⚠️ Возражение: <b>{obj_type}</b>\n"
             f"👤 Персона: {persona}\n"
             f"💬 Реплик: {history_count}\n\n"
             "Продолжай работу с возражением!"
         )
         
-        await message.reply(status_text, parse_mode="Markdown")
+        await message.reply(status_text, parse_mode="HTML")

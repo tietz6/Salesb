@@ -88,20 +88,20 @@ def register_message_router(dp, registry):
         coach_suggestion = result.get('coach_suggestion', '')
         score = result.get('score', 0)
         
-        response = f"📍 Этап: *{stage_name}*\n"
+        response = f"📍 Этап: <b>{stage_name}</b>\n"
         
         if score > 0:
             response += f"⭐ Оценка: {score} балл(а)\n\n"
         
         if coach_suggestion:
-            response += f"🎓 *Совет коуча:*\n{coach_suggestion}\n\n"
+            response += f"🎓 <b>Совет коуча:</b>\n{coach_suggestion}\n\n"
         else:
             response += "✅ Хорошо! Продолжай в том же духе.\n\n"
         
         response += "Используй /mp_next для перехода на следующий этап\n"
         response += "или /mp_reset для начала заново"
         
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="HTML")
     
     async def _handle_arena_message(message: types.Message, user_id: str):
         """Обработка сообщения для Arena"""
@@ -124,7 +124,7 @@ def register_message_router(dp, registry):
         
         emotion_name = emotions_ru.get(emotion, emotion)
         
-        response = f"👤 *Клиент ({emotion_name}):*\n"
+        response = f"👤 <b>Клиент ({emotion_name}):</b>\n"
         
         if client_reply:
             response += f"{client_reply}\n\n"
@@ -137,7 +137,7 @@ def register_message_router(dp, registry):
         response += "Продолжай диалог!\n"
         response += "/arena_reset - новый клиент"
         
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="HTML")
     
     async def _handle_objections_message(message: types.Message, user_id: str):
         """Обработка сообщения для Objections"""
@@ -149,7 +149,7 @@ def register_message_router(dp, registry):
         client_reply = result.get('client_reply', '')
         score = result.get('score', 0)
         
-        response = "👤 *Клиент:*\n"
+        response = "👤 <b>Клиент:</b>\n"
         
         if client_reply:
             response += f"{client_reply}\n\n"
@@ -162,7 +162,7 @@ def register_message_router(dp, registry):
         response += "Продолжай работу с возражением!\n"
         response += "/obj_reset - новое возражение"
         
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="HTML")
     
     async def _handle_upsell_message(message: types.Message, user_id: str):
         """Обработка сообщения для Upsell"""
@@ -183,7 +183,7 @@ def register_message_router(dp, registry):
         
         package_name = packages_ru.get(package, package)
         
-        response = f"👤 *Клиент (пакет {package_name}):*\n"
+        response = f"👤 <b>Клиент (пакет {package_name}):</b>\n"
         
         if client_reply:
             response += f"{client_reply}\n\n"
@@ -196,7 +196,7 @@ def register_message_router(dp, registry):
         response += "Продолжай допродажу!\n"
         response += "/upsell_reset - новый сценарий"
         
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="HTML")
 
 
 def set_active_session(user_id: str, session_type: str):
