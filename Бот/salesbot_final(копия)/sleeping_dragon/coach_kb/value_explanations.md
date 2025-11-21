@@ -1,3 +1,0 @@
-## 100 Ways to Explain Value
-
-- Пример 1...

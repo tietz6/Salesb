@@ -1,5 +1,0 @@
-
-state:
-  stage: greeting|qualification|support|offer|demo|final|done
-  history: [...]
-  metadata: {...}

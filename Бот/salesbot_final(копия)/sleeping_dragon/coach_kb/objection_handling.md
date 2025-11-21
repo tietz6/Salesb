@@ -1,3 +1,0 @@
-## Case-based Objection Handling
-
-- Кейс 1...
