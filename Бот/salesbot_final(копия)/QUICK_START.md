@@ -83,8 +83,7 @@ start_core_api.bat
 - FastAPI сервер (порт 8080)
 - Telegram бот с полным функционалом (aiogram 3.x)
 
-**Альтернатива:** Для разработчиков доступен упрощённый бот `start_simple_telegram_bot.bat`.
-См. **STARTUP_OPTIONS.md** для деталей.
+Всё управление через один батник - просто и удобно!
 
 #### Linux/Mac
 ```bash
