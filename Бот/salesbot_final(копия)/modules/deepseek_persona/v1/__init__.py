@@ -4,12 +4,15 @@ __all__=['router']
 # Telegram integration
 try:
     from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram.filters import Command, CommandObject
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    Command = None
+    CommandObject = None
 
 def register_telegram(dp, registry):
     """
@@ -19,8 +22,8 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["coach"])
-    async def _cmd_coach(message: types.Message):
+    @dp.message(Command("coach"))
+    async def _cmd_coach(message: types.Message, command: CommandObject):
         """
         Команда /coach <текст> - получить совет коуча
         Пример: /coach Как ответить клиенту на возражение о цене?
@@ -28,7 +31,7 @@ def register_telegram(dp, registry):
         from .service import persona_chat
         
         # Получаем текст после команды
-        text = message.get_args()
+        text = command.args if command else None
         if not text:
             await message.reply(
                 "📝 Используй команду так:\n"
@@ -44,8 +47,8 @@ def register_telegram(dp, registry):
         except Exception as e:
             await message.reply(f"❌ Ошибка: {str(e)}")
     
-    @dp.message_handler(commands=["stylize"])
-    async def _cmd_stylize(message: types.Message):
+    @dp.message(Command("stylize"))
+    async def _cmd_stylize(message: types.Message, command: CommandObject):
         """
         Команда /stylize <текст> - стилизовать текст под бренд "На Счастье"
         Пример: /stylize Здравствуйте, я могу вам помочь
@@ -53,7 +56,7 @@ def register_telegram(dp, registry):
         from .service import apply_persona
         
         # Получаем текст после команды
-        text = message.get_args()
+        text = command.args if command else None
         if not text:
             await message.reply(
                 "✨ Используй команду так:\n"
@@ -69,7 +72,7 @@ def register_telegram(dp, registry):
         except Exception as e:
             await message.reply(f"❌ Ошибка: {str(e)}")
     
-    @dp.message_handler(commands=["persona_info"])
+    @dp.message(Command("persona_info"))
     async def _cmd_persona_info(message: types.Message):
         """
         Команда /persona_info - получить информацию о персоне бренда

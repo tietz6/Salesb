@@ -36,19 +36,14 @@ echo Voice API Key: %VOICE_API_KEY%
 echo.
 
 REM === ЗАПУСК API ===
-echo [1/4] Запуск FastAPI сервера...
+echo [1/2] Запуск FastAPI сервера...
 start "SALESBOT_API" python -m uvicorn startup:app --host 0.0.0.0 --port 8080 --reload
 
-REM === Запуск main.py ===
-echo [2/4] Запуск main.py...
-start "SALESBOT_MAIN" python main.py
+REM Пауза для запуска сервера
+timeout /t 3 /nobreak > nul
 
-REM === Запускаем simple_telegram_bot.py ===
-echo [3/4] Запуск simple telegram bot...
-start "SALESBOT_SIMPLE_BOT" python simple_telegram_bot.py
-
-REM === Запускаем telegram_bot.py (основной бот) ===
-echo [4/4] Запуск основного telegram bot...
+REM === Запускаем telegram_bot.py (основной бот с aiogram 3.x) ===
+echo [2/2] Запуск Telegram бота с модулями...
 start "SALESBOT_TELEGRAM_BOT" python telegram_bot.py
 
 echo.
@@ -58,9 +53,19 @@ echo ===================================
 echo.
 echo Открытые окна:
 echo - SALESBOT_API: FastAPI сервер (порт 8080)
-echo - SALESBOT_MAIN: Основное приложение
-echo - SALESBOT_SIMPLE_BOT: Простой Telegram бот
-echo - SALESBOT_TELEGRAM_BOT: Продвинутый Telegram бот
+echo - SALESBOT_TELEGRAM_BOT: Telegram бот с модулями тренировки
+echo.
+echo Доступные команды в боте:
+echo   /start или /menu - Главное меню
+echo   /master_path - Путь Мастера (полный цикл продажи)
+echo   /arena - Арена с AI-клиентами
+echo   /objections - Работа с возражениями
+echo   /upsell - Допродажи
+echo   /coach ^<вопрос^> - Совет коуча
+echo   /stylize ^<текст^> - Стилизация под бренд
+echo   /products - Каталог продуктов
+echo   /script - Скрипт продаж
+echo   /stats - Статистика тренировок
 echo.
 echo Нажмите любую клавишу для выхода...
 pause

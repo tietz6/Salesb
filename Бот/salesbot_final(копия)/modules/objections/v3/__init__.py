@@ -4,12 +4,14 @@ __all__=['ObjectionEngine']
 # Telegram integration
 try:
     from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram.filters import Command
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    Command = None
 
 def register_telegram(dp, registry):
     """
@@ -19,7 +21,7 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["objections", "возражения"])
+    @dp.message(Command("objections", "возражения"))
     async def _cmd_objections(message: types.Message):
         """
         Команда /objections - тренировка работы с возражениями
@@ -76,7 +78,7 @@ def register_telegram(dp, registry):
         
         await message.reply(help_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["obj_reset"])
+    @dp.message(Command("obj_reset"))
     async def _cmd_obj_reset(message: types.Message):
         """Начать с новым возражением"""
         from .engine import ObjectionEngine
@@ -94,7 +96,7 @@ def register_telegram(dp, registry):
         
         await message.reply("🔄 Новое возражение сгенерировано!\n\nИспользуй /objections чтобы начать.")
     
-    @dp.message_handler(commands=["obj_status"])
+    @dp.message(Command("obj_status"))
     async def _cmd_obj_status(message: types.Message):
         """Посмотреть статистику"""
         from .engine import ObjectionEngine

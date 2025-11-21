@@ -1,11 +1,13 @@
 try:
     from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram.filters import Command
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    Command = None
 
 def register_telegram(dp, registry):
     """
@@ -15,7 +17,7 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["upsell", "допродажи"])
+    @dp.message(Command("upsell", "допродажи"))
     async def _cmd_upsell(message: types.Message):
         """
         Команда /upsell - тренировка допродаж
@@ -64,7 +66,7 @@ def register_telegram(dp, registry):
         
         await message.reply(help_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["upsell_reset"])
+    @dp.message(Command("upsell_reset"))
     async def _cmd_upsell_reset(message: types.Message):
         """Начать с новым сценарием"""
         from .engine import UpsellEngine
@@ -82,7 +84,7 @@ def register_telegram(dp, registry):
         
         await message.reply("🔄 Новый сценарий допродажи сгенерирован!\n\nИспользуй /upsell чтобы начать.")
     
-    @dp.message_handler(commands=["upsell_status"])
+    @dp.message(Command("upsell_status"))
     async def _cmd_upsell_status(message: types.Message):
         """Посмотреть статистику"""
         from .engine import UpsellEngine
