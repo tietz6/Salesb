@@ -175,12 +175,14 @@ echo   - Отправьте /start боту в Telegram
 echo.
 echo Если бот не отвечает:
 echo   1. Проверьте логи в окне SALESBOT_TELEGRAM_BOT
-echo   2. Убедитесь, что TELEGRAM_BOT_TOKEN правильный
-echo   3. Проверьте подключение к интернету
-echo   4. Запустите: python validate_setup.py
-echo   5. См. STARTUP_OPTIONS.md раздел "Решение проблем"
+echo   2. Запустите диагностику: python test_telegram_connection.py
+echo   3. Или используйте: start_telegram.bat (интерактивное меню)
+echo   4. Проверьте TELEGRAM_TROUBLESHOOTING.md для решения проблем
+echo   5. См. TELEGRAM_CONNECTION_FIX.md для полного описания исправлений
 echo.
 echo Документация:
+echo   - TELEGRAM_CONNECTION_FIX.md - Новое! Решение проблем с подключением
+echo   - TELEGRAM_TROUBLESHOOTING.md - Новое! Полное руководство по диагностике
 echo   - STARTUP_OPTIONS.md - Варианты запуска и решение проблем
 echo   - QUICK_START.md - Быстрый старт за 5 минут
 echo   - TELEGRAM_BOT_GUIDE.md - Полное руководство по боту
