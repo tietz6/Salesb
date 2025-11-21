@@ -20,17 +20,23 @@
 
 #### Windows (через .bat файл)
 
-Создай или отредактируй `start_telegram_bot.bat`:
+Отредактируй `start_core_api.bat` - укажи свои токены:
 
 ```batch
 @echo off
-set TELEGRAM_BOT_TOKEN=твой_токен_telegram
+REM === КЛЮЧИ И НАСТРОЙКИ ===
+
+REM DeepSeek
 set DEEPSEEK_API_KEY=твой_ключ_deepseek
 set DEEPSEEK_MODEL=deepseek-chat
 
-echo Starting Telegram Bot...
-python telegram_bot.py
-pause
+REM Голос (ASR)
+set VOICE_API_KEY=твой_ключ_voice_api
+
+REM Телеграм-бот
+set TELEGRAM_BOT_TOKEN=твой_токен_telegram
+set TG_BOT_TOKEN=твой_токен_telegram
+set TELEGRAM_TOKEN=твой_токен_telegram
 ```
 
 #### Windows (через командную строку)
@@ -64,8 +70,22 @@ pip install -r requirements.txt
 - `requests` - для HTTP запросов
 - И другие необходимые библиотеки
 
-### Шаг 4: Запусти бота
+### Шаг 4: Запусти все компоненты
 
+#### Windows
+Просто запусти `start_core_api.bat`:
+
+```cmd
+start_core_api.bat
+```
+
+Это запустит все необходимые компоненты в отдельных окнах:
+- FastAPI сервер (порт 8080)
+- Основное приложение
+- Simple Telegram бот
+- Основной Telegram бот
+
+#### Linux/Mac
 ```bash
 python telegram_bot.py
 ```
