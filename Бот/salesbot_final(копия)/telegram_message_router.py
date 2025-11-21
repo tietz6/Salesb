@@ -2,13 +2,14 @@
 Message router for telegram bot - routes messages to active training sessions
 """
 try:
-    from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram import types, F
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    F = None
 
 
 # Global session tracker
@@ -22,7 +23,7 @@ def register_message_router(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(lambda msg: not msg.text.startswith('/'), content_types=types.ContentTypes.TEXT)
+    @dp.message(F.text & ~F.text.startswith('/'))
     async def _route_message_to_active_session(message: types.Message):
         """
         Маршрутизирует обычные текстовые сообщения к активным сессиям тренировок

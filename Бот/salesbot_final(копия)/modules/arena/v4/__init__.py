@@ -4,12 +4,14 @@ __all__=['ArenaEngine']
 # Telegram integration
 try:
     from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram.filters import Command
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    Command = None
 
 def register_telegram(dp, registry):
     """
@@ -19,7 +21,7 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["arena", "арена"])
+    @dp.message(Command("arena", "арена"))
     async def _cmd_arena(message: types.Message):
         """
         Команда /arena - тренировка с AI-клиентом
@@ -74,7 +76,7 @@ def register_telegram(dp, registry):
         
         await message.reply(help_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["arena_reset"])
+    @dp.message(Command("arena_reset"))
     async def _cmd_arena_reset(message: types.Message):
         """Начать с новым клиентом"""
         from .engine import ArenaEngine
@@ -92,7 +94,7 @@ def register_telegram(dp, registry):
         
         await message.reply("🔄 Новый клиент сгенерирован!\n\nИспользуй /arena чтобы начать.")
     
-    @dp.message_handler(commands=["arena_status"])
+    @dp.message(Command("arena_status"))
     async def _cmd_arena_status(message: types.Message):
         """Посмотреть статистику"""
         from .engine import ArenaEngine

@@ -4,12 +4,14 @@ __all__=['MasterPath']
 # Telegram integration
 try:
     from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram.filters import Command
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    Command = None
 
 def register_telegram(dp, registry):
     """
@@ -20,7 +22,7 @@ def register_telegram(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["master_path", "путь_мастера"])
+    @dp.message(Command("master_path", "путь_мастера"))
     async def _cmd_master_path(message: types.Message):
         """
         Команда /master_path - начать тренировку "Путь Мастера"
@@ -72,7 +74,7 @@ def register_telegram(dp, registry):
         
         await message.reply(help_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["mp_next"])
+    @dp.message(Command("mp_next"))
     async def _cmd_mp_next(message: types.Message):
         """Перейти к следующему этапу"""
         from .engine import MasterPath
@@ -95,7 +97,7 @@ def register_telegram(dp, registry):
         
         await message.reply(f"✅ Переход на этап: *{stage_name}*", parse_mode="Markdown")
     
-    @dp.message_handler(commands=["mp_reset"])
+    @dp.message(Command("mp_reset"))
     async def _cmd_mp_reset(message: types.Message):
         """Начать тренировку заново"""
         from .engine import MasterPath
@@ -113,7 +115,7 @@ def register_telegram(dp, registry):
         
         await message.reply("🔄 Тренировка сброшена. Начинаем с начала!\n\nИспользуй /master_path чтобы начать.")
     
-    @dp.message_handler(commands=["mp_status"])
+    @dp.message(Command("mp_status"))
     async def _cmd_mp_status(message: types.Message):
         """Посмотреть текущий прогресс"""
         from .engine import MasterPath

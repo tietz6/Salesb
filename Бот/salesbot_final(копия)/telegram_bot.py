@@ -1,7 +1,6 @@
 import os
-from aiogram import Bot
-from aiogram.dispatcher import Dispatcher
-from aiogram.utils import executor
+import asyncio
+from aiogram import Bot, Dispatcher
 from api.core.registry import ModuleRegistry
 from telegram.autoload import autoload_telegram_handlers
 from telegram_main_menu import register_main_menu
@@ -12,7 +11,7 @@ if not TELEGRAM_TOKEN:
     raise RuntimeError("TELEGRAM_TOKEN or TELEGRAM_BOT_TOKEN environment variable required")
 
 bot = Bot(token=TELEGRAM_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
 registry = ModuleRegistry()
 
 print("[telegram_bot] Registering main menu and commands...")
@@ -29,7 +28,7 @@ register_message_router(dp, registry)
 
 print("[telegram_bot] All handlers registered. Starting bot...")
 
-def run():
+async def main():
     print(f"[telegram_bot] Bot is running! Connected to Telegram API.")
     print(f"[telegram_bot] Send /start to the bot to begin!")
     print(f"[telegram_bot] Available commands:")
@@ -40,7 +39,10 @@ def run():
     print(f"  /upsell - Upselling training")
     print(f"  /products - Product catalog")
     print(f"  /script - Sales script")
-    executor.start_polling(dp, skip_updates=True)
+    await dp.start_polling(bot, skip_updates=True)
+
+def run():
+    asyncio.run(main())
 
 if __name__ == "__main__":
     run()

@@ -2,13 +2,16 @@
 Главное меню телеграм-бота - центральная точка входа для всех модулей
 """
 try:
-    from aiogram import types
-    from aiogram.dispatcher import Dispatcher
+    from aiogram import types, F
+    from aiogram.filters import Command
+    from aiogram import Dispatcher
     AIOGRAM_AVAILABLE = True
 except ImportError:
     AIOGRAM_AVAILABLE = False
     types = None
     Dispatcher = None
+    Command = None
+    F = None
 
 
 def register_main_menu(dp, registry):
@@ -18,7 +21,7 @@ def register_main_menu(dp, registry):
     if not AIOGRAM_AVAILABLE:
         return
     
-    @dp.message_handler(commands=["start", "help", "menu", "меню"])
+    @dp.message(Command("start", "help", "menu", "меню"))
     async def _cmd_start(message: types.Message):
         """
         Главное меню бота - показывает все доступные модули
@@ -79,7 +82,7 @@ def register_main_menu(dp, registry):
         
         await message.reply(welcome_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["products", "продукты"])
+    @dp.message(Command("products", "продукты"))
     async def _cmd_products(message: types.Message):
         """
         Информация о продуктах и услугах бренда "На Счастье"
@@ -135,7 +138,7 @@ def register_main_menu(dp, registry):
         
         await message.reply(products_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["script", "скрипт"])
+    @dp.message(Command("script", "скрипт"))
     async def _cmd_script(message: types.Message):
         """
         Показывает основной скрипт продаж
@@ -190,7 +193,7 @@ def register_main_menu(dp, registry):
         
         await message.reply(script_text, parse_mode="Markdown")
     
-    @dp.message_handler(commands=["stats", "статистика"])
+    @dp.message(Command("stats", "статистика"))
     async def _cmd_stats(message: types.Message):
         """
         Общая статистика по всем модулям

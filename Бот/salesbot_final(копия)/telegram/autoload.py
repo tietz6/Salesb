@@ -3,8 +3,8 @@ import pkgutil
 from typing import Optional
 from api.core.registry import ModuleRegistry
 
-# Библиотека: aiogram (v2) — используем Dispatcher интерфейс
-from aiogram.dispatcher import Dispatcher
+# Библиотека: aiogram (v3) — используем Dispatcher интерфейс
+from aiogram import Dispatcher
 
 
 def autoload_telegram_handlers(dp: Dispatcher, registry: ModuleRegistry, package_name: str = "modules"):
