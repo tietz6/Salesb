@@ -63,10 +63,10 @@ def register_telegram(dp, registry):
         emotion_name = emotions_ru.get(state['emotion'], state['emotion'])
         
         help_text = (
-            "⚔️ *Арена* - Тренировка с AI-клиентом\n\n"
-            f"👤 Тип клиента: *{ctype_name}*\n"
+            "⚔️ <b>Арена</b> - Тренировка с AI-клиентом\n\n"
+            f"👤 Тип клиента: <b>{ctype_name}</b>\n"
             f"{emotion_name}\n"
-            f"🎚 Сложность: *{state['difficulty']}*\n\n"
+            f"🎚 Сложность: <b>{state['difficulty']}</b>\n\n"
             "💬 Начни диалог с клиентом!\n"
             "Я буду отвечать как настоящий клиент через DeepSeek AI.\n\n"
             "Команды:\n"
@@ -74,7 +74,7 @@ def register_telegram(dp, registry):
             "/arena_status - статистика"
         )
         
-        await message.reply(help_text, parse_mode="Markdown")
+        await message.reply(help_text, parse_mode="HTML")
     
     @dp.message(Command("arena_reset"))
     async def _cmd_arena_reset(message: types.Message):
@@ -126,12 +126,12 @@ def register_telegram(dp, registry):
         round_num = state.get('meta', {}).get('round', 0)
         
         status_text = (
-            f"📊 *Статус Арены*\n\n"
-            f"👤 Клиент: *{ctype_name}*\n"
+            f"📊 <b>Статус Арены</b>\n\n"
+            f"👤 Клиент: <b>{ctype_name}</b>\n"
             f"{emotion_name}\n"
-            f"🎚 Сложность: *{state['difficulty']}*\n"
+            f"🎚 Сложность: <b>{state['difficulty']}</b>\n"
             f"🔄 Раунд: {round_num}\n\n"
             "Продолжай диалог, отправляя сообщения!"
         )
         
-        await message.reply(status_text, parse_mode="Markdown")
+        await message.reply(status_text, parse_mode="HTML")
