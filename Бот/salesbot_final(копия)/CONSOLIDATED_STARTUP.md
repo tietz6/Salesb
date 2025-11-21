@@ -4,13 +4,15 @@
 
 ### Что изменилось?
 
-Теперь **все компоненты системы** запускаются одним файлом `start_core_api.bat`.
+Теперь **все необходимые компоненты системы** запускаются одним файлом `start_core_api.bat`.
 
 ### До изменений
 
-Ранее требовалось запускать компоненты отдельно:
+Ранее требовалось запускать компоненты отдельно, что приводило к конфликтам:
 - `start_core_api.bat` - для API и части ботов
 - `start_telegram_bot.bat` - для основного Telegram бота
+- main.py и uvicorn конфликтовали на порту 8080
+- simple_telegram_bot.py и telegram_bot.py конфликтовали (один токен)
 
 ### После изменений
 
@@ -21,12 +23,23 @@ start_core_api.bat
 
 ## Что запускается?
 
-При запуске `start_core_api.bat` автоматически стартуют 4 компонента в отдельных окнах:
+При запуске `start_core_api.bat` автоматически стартуют **2 компонента** в отдельных окнах:
 
-1. **SALESBOT_API** - FastAPI сервер на порту 8080
-2. **SALESBOT_MAIN** - Основное приложение (main.py)
-3. **SALESBOT_SIMPLE_BOT** - Простой Telegram бот (simple_telegram_bot.py)
-4. **SALESBOT_TELEGRAM_BOT** - Продвинутый Telegram бот с модулями (telegram_bot.py)
+1. **SALESBOT_API** - FastAPI сервер на порту 8080 (через uvicorn)
+2. **SALESBOT_TELEGRAM_BOT** - Полнофункциональный Telegram бот с aiogram 3.x и всеми модулями тренировки
+
+### Почему не 4 компонента?
+
+**Удалённые компоненты (из-за конфликтов):**
+- ❌ **main.py** - Конфликтовал с uvicorn (оба на порту 8080). Теперь используется только uvicorn.
+- ❌ **simple_telegram_bot.py** - Конфликтовал с telegram_bot.py (оба использовали один токен). Теперь используется только telegram_bot.py с полным функционалом.
+
+**Альтернативный запуск:**
+Если вам нужен simple_telegram_bot.py (упрощённый API-based бот), используйте отдельный скрипт:
+```cmd
+start_simple_telegram_bot.bat
+```
+⚠️ **ВАЖНО:** Не запускайте оба бота одновременно с одним токеном!
 
 ## Настройка переменных окружения
 
@@ -61,11 +74,31 @@ set TELEGRAM_PUSH_MOCK_MODE=false
 
 ## Проверка работы
 
-После запуска проверьте, что все окна открылись:
-- Окно с FastAPI (должен отображаться uvicorn)
-- Окно с main.py
-- Окно с simple_telegram_bot.py
-- Окно с telegram_bot.py (должно показать "[telegram_bot] Bot is running!")
+После запуска проверьте, что оба окна открылись:
+- **Окно SALESBOT_API** - FastAPI сервер (должен отображаться uvicorn на порту 8080)
+- **Окно SALESBOT_TELEGRAM_BOT** - Telegram бот (должно показать "[telegram_bot] Bot is running!")
+
+### Признаки успешного запуска:
+
+**В окне SALESBOT_API:**
+```
+INFO:     Started server process [xxxx]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080
+```
+
+**В окне SALESBOT_TELEGRAM_BOT:**
+```
+[telegram_bot] Registering main menu and commands...
+[telegram_bot] Auto-loading module handlers...
+[tg_autoload] Registered telegram handlers for modules.arena
+[tg_autoload] Registered telegram handlers for modules.deepseek_persona
+[tg_autoload] Registered telegram handlers for modules.master_path
+[tg_autoload] Registered telegram handlers for modules.objections
+[tg_autoload] Registered telegram handlers for modules.upsell
+[telegram_bot] Bot is running! Connected to Telegram API.
+```
 
 ## Остановка
 
