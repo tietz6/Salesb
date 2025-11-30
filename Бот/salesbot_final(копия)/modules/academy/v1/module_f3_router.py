@@ -2,7 +2,7 @@
 Router модуля F3 — Эмоциональная коммуникация
 FastAPI эндпоинты для работы с модулем обучения эмоциональной коммуникации
 
-API пути: /academy/v1/modules/module_f3
+API пути: /academy/v1/modules/module_f3_emotion
 """
 
 import logging
@@ -21,10 +21,10 @@ from .module_f3_service import (
 log = logging.getLogger(__name__)
 
 # Основной роутер с версионированным путём
-router = APIRouter(prefix="/academy/v1/modules/module_f3", tags=["academy_modules"])
+router = APIRouter(prefix="/academy/v1/modules/module_f3_emotion", tags=["academy_modules"])
 
 # Дополнительный роутер без версии для совместимости
-router_noversion = APIRouter(prefix="/academy/modules/module_f3", tags=["academy_modules"])
+router_noversion = APIRouter(prefix="/academy/modules/module_f3_emotion", tags=["academy_modules"])
 
 
 # Pydantic модели для валидации входных данных
