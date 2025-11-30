@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 import importlib
+import logging
+
+# Configure logger for module loading
+log = logging.getLogger("modules.academy.repository")
+
 ROUTE_MODULES = [
     # Публичные API
     # "api.voice.v1.routes",  # Disabled - requires httpx
@@ -46,6 +51,17 @@ def include_all(app: FastAPI)->None:
                 continue
             app.include_router(router)
             attached.append(m)
+            
+            # Log academy module loading with module info
+            if "academy" in m:
+                try:
+                    # Try to get module data for logging
+                    module_f3 = importlib.import_module("modules.academy.v1.module_f3_emotion")
+                    module_data = getattr(module_f3, "MODULE_F3_EMOTION", None)
+                    if module_data:
+                        log.info("Loaded module: %s - %s", module_data.get("id"), module_data.get("title"))
+                except Exception:
+                    pass
             
             # Also include additional routers if they exist (e.g., router_autocheck, router_autocheck_noversion)
             for attr_name in dir(mod):
