@@ -28,6 +28,9 @@ ROUTE_MODULES = [
     "modules.edu_lessons.v1.routes",
     "modules.client_cases.v1.routes",
 
+    # Academy модули
+    "modules.academy.v1.module_f3_router",
+
     # Интеграции
     "integrations.telegram_push.v1.routes",
     "integrations.telegram_bot.v1.routes",
